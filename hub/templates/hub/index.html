@@ -18,8 +18,19 @@
     {% if query %}
     <h3 class="mb-4">Search Results for "{{ query }}"</h3>
 
-    {% if not error_results and not faq_results and not manual_results %}
-    <div class="alert alert-warning">No results found. Please try a different query.</div>
+    {% if not error_results and not faq_results and not manual_results and not question_results %}
+    <div class="alert alert-warning">No direct results found for "{{ query }}".</div>
+    {% endif %}
+
+    {% if suggestions %}
+    <div class="mb-4">
+        <h5 class="text-muted">Did you mean to look for?</h5>
+        <div class="d-flex flex-wrap gap-2">
+            {% for suggestion in suggestions %}
+            <a href="{{ suggestion.url }}" class="btn btn-outline-primary rounded-pill">{{ suggestion.label }}</a>
+            {% endfor %}
+        </div>
+    </div>
     {% endif %}
 
     {% if error_results %}
@@ -83,22 +94,28 @@
     <!-- Empty State / Quick Links -->
     <div class="row text-center mt-5">
         <div class="col-md-4">
-            <div class="p-4 bg-light rounded shadow-sm">
-                <h3>🔍 Error Lookup</h3>
-                <p>Enter an error code above to see causes and solutions.</p>
-            </div>
+            <a href="{% url 'error_list' %}" class="text-decoration-none text-dark">
+                <div class="p-4 bg-light rounded shadow-sm hover-shadow transition">
+                    <h3>🔍 Error Lookup</h3>
+                    <p>Enter an error code above or browse all codes.</p>
+                </div>
+            </a>
         </div>
         <div class="col-md-4">
-            <div class="p-4 bg-light rounded shadow-sm">
-                <h3>📚 Manuals</h3>
-                <p>Download PDF manuals for AC310, AC10, and more.</p>
-            </div>
+            <a href="{% url 'manual_list' %}" class="text-decoration-none text-dark">
+                <div class="p-4 bg-light rounded shadow-sm hover-shadow transition">
+                    <h3>📚 Manuals</h3>
+                    <p>Download PDF manuals for AC310, AC10, and more.</p>
+                </div>
+            </a>
         </div>
         <div class="col-md-4">
-            <div class="p-4 bg-light rounded shadow-sm">
-                <h3>❓ FAQs</h3>
-                <p>Common questions about installation and wiring.</p>
-            </div>
+            <a href="{% url 'faq_list' %}" class="text-decoration-none text-dark">
+                <div class="p-4 bg-light rounded shadow-sm hover-shadow transition">
+                    <h3>❓ FAQs</h3>
+                    <p>Common questions about installation and wiring.</p>
+                </div>
+            </a>
         </div>
     </div>
     {% endif %}

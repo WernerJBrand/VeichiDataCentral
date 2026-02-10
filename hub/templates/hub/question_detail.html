@@ -1,0 +1,72 @@
+{% extends 'hub/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'question_list' %}">Forum</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ question.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">{{ question.title }}</h3>
+            {% if question.status != 'approved' %}
+            <span class="badge bg-warning text-dark">Pending Review</span>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <p class="card-text lead">{{ question.content|linebreaks }}</p>
+
+            {% if user.is_staff and question.status == 'pending' %}
+            <hr>
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" name="approve" value="true" class="btn btn-success">Approve This Question</button>
+            </form>
+            {% endif %}
+        </div>
+        <div class="card-footer text-muted">
+            Asked by <strong>{{ question.user.username }}</strong> on {{ question.created_at|date:"F d, Y" }}
+            {% if question.related_vfd %}
+            <span class="badge bg-secondary ms-2">{{ question.related_vfd.series_name }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <h4 class="mb-3">{{ question.answers.count }} Answers</h4>
+
+    {% for answer in question.answers.all %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <p class="card-text">{{ answer.content|linebreaks }}</p>
+            <p class="card-text"><small class="text-muted">Answered by {{ answer.user.username }} on {{
+                    answer.created_at|date:"M d, Y H:i" }}</small></p>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted fst-italic">No answers yet.</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+    <div class="card mt-4 bg-light">
+        <div class="card-body">
+            <h5 class="card-title">Post an Answer</h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <textarea class="form-control" name="content" rows="3" required
+                        placeholder="Write your answer here..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Submit Answer</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-secondary mt-4">
+        Please <a href="/admin/login/?next={{ request.path }}">login</a> to post an answer.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

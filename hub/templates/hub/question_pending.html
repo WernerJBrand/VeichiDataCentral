@@ -1,0 +1,16 @@
+{% extends 'hub/base.html' %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="card shadow-sm p-5 border-warning">
+        <h1 class="display-4 text-warning">Submitted for Review</h1>
+        <p class="lead">Thank you for posting your question!</p>
+        <p>To ensure quality, our technicians review all new posts. Your question will appear in the forum once
+            approved.</p>
+        <div class="mt-4">
+            <a href="{% url 'question_list' %}" class="btn btn-primary">Back to Forum</a>
+            <a href="/" class="btn btn-outline-secondary">Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

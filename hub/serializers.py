@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import VFDModel, ErrorCode, Manual, FAQ
+from .models import VFDModel, ErrorCode, Manual, FAQ, Question, Answer
 
 class VFDModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,4 +20,17 @@ class ManualSerializer(serializers.ModelSerializer):
 class FAQSerializer(serializers.ModelSerializer):
     class Meta:
         model = FAQ
+        fields = '__all__'
+
+class AnswerSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model = Answer
+        fields = '__all__'
+
+class QuestionSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    answers = AnswerSerializer(many=True, read_only=True)
+    class Meta:
+        model = Question
         fields = '__all__'

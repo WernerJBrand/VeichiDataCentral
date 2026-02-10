@@ -1,6 +1,19 @@
-django>=5.0,<6.0
+django>=5.0
 djangorestframework
 django-cors-headers
-django-filter
-markdown
 django-bootstrap5
+django-filter
+openpyxl
+# AWS / Production
+boto3
+django-storages
+dj-database-url
+psycopg2-binary
+gunicorn
+whitenoise
+# OCR / Image Processing
+pytesseract
+pdf2image
+pillow
+# Environment Variables
+python-dotenv
